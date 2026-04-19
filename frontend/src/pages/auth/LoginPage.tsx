@@ -47,11 +47,8 @@ export default function LoginPage() {
             Se connecter
           </button>
           <p className="text-center text-sm text-slate-500 mt-4">
-            Vous n’avez pas de compte ?{" "}
-            <span className="text-blue-600 cursor-pointer hover:underline">
-                Créer un compte
-            </span>
-            </p>
+            Contactez l’administrateur pour obtenir un accès
+          </p>
         </form>
       </div>
     </div>
