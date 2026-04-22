@@ -5,7 +5,7 @@ export const loginUser = async (email: string, password: string) => {
     "http://localhost:8080/api/auth/login",
     {
       email,
-      password,
+       motDePasse: password,
     }
   );
 
