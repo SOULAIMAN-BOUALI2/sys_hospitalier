@@ -24,9 +24,6 @@ public class Utilisateur {
     @Column(name = "statut_compte")
     private String statutCompte;
 
-    @Column(name = "supabase_id", unique = true)
-    private String supabaseId;
-
     @Column(name = "mot_de_passe", nullable = false)
     private String motDePasse;
 

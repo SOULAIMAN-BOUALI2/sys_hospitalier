@@ -41,6 +41,7 @@ export default function DashboardAdmin() {
   console.log(filteredUsers)
 
   return (
+    
     <div className="min-h-screen bg-slate-950 text-white p-8">
       <div className="max-w-4xl mx-auto">
         <div className="flex justify-between items-center mb-8">
@@ -62,7 +63,10 @@ export default function DashboardAdmin() {
             <h2 className="text-xl font-semibold mb-2">👩‍⚕️ Infirmiers</h2>
             <p className="text-slate-400">Gérer les infirmiers</p>
           </div>
-          <div onClick={() => navigate("/admin/add-user")} className="bg-slate-800 rounded-xl p-6 cursor-pointer hover:bg-slate-700">
+          <div onClick={() => {
+              console.log("TOKEN =", localStorage.getItem("token"));
+              navigate("/add-user");
+            }} className="bg-slate-800 rounded-xl p-6 cursor-pointer hover:bg-slate-700">
             <h2 className="text-xl font-semibold mb-2">➕ Créer un compte</h2>
             <p className="text-slate-400">Ajouter médecin ou infirmier</p>
           </div>
