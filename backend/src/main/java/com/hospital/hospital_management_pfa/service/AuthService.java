@@ -9,6 +9,8 @@ import com.hospital.hospital_management_pfa.security.JwtUtil;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class AuthService {
 
@@ -59,6 +61,9 @@ public class AuthService {
                 utilisateur.getPrenom(),
                 utilisateur.getEmail()
         );
+    }
+    public List<Utilisateur> getAllUsers() {
+        return utilisateurRepository.findAll();
     }
 
     public void createUtilisateur(CreateUtilisateurRequest request) {

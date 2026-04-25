@@ -9,6 +9,7 @@ export default function LoginPage() {
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
+    console.log(email,password)
     e.preventDefault();
     setError("");
 

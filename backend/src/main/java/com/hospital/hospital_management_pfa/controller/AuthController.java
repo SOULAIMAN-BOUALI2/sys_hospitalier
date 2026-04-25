@@ -3,9 +3,13 @@ package com.hospital.hospital_management_pfa.controller;
 import com.hospital.hospital_management_pfa.dto.CreateUtilisateurRequest;
 import com.hospital.hospital_management_pfa.dto.LoginRequest;
 import com.hospital.hospital_management_pfa.dto.LoginResponse;
+import com.hospital.hospital_management_pfa.model.Utilisateur;
 import com.hospital.hospital_management_pfa.service.AuthService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Scanner;
 
 @RestController
 @RequestMapping("/api/auth")
