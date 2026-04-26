@@ -8,5 +8,12 @@ public class CreateUtilisateurRequest {
     private String prenom;
     private String email;
     private String motDePasse;
-    private String role; // "ADMIN", "MEDECIN", "INFIRMIER"
+    private String role;
+
+    private String matricule;
+    private String specialite;
+    private String service;
+    private String shift;
+
+    // getters + setters
 }

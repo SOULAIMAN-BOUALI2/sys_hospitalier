@@ -1,6 +1,7 @@
 import { redirect, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { getUsers } from "../../services/authService";
+import { createUser } from "../../services/userService";
 
 // ✅ mettre type en dehors du composant
 type User = {
@@ -48,6 +49,8 @@ export default function DashboardAdmin() {
   const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault();
   
+  await createUser(form);
+
   //console.log(form);
 };
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
