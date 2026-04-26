@@ -10,14 +10,8 @@ export default function AppRoutes() {
     <Routes>
       <Route path="/" element={<Navigate to="/login" />} />
       <Route path="/login" element={<LoginPage />} />
-      <Route
-        path="/add-user"
-        element={
-          <PrivateRoute>
-            <AddUserPage />
-          </PrivateRoute>
-        }
-      />
+      
+      <Route path="/addUser" element={<AddUserPage />} />
     </Routes>
   );
 }

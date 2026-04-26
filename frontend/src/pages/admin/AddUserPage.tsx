@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 
+console.log("smdd");
 export default function AddUserPage() {
     console.log("hhhhh");
   const [form, setForm] = useState({

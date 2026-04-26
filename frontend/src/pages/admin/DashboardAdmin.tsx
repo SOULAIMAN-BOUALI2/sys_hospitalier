@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { redirect, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { getUsers } from "../../services/authService";
 
@@ -7,13 +7,31 @@ type User = {
   nom: string;
   prenom: string;
   email: string;
-  role: string;
+  motDePasse: "",
+  role: "MEDECIN",
+  matricule: "",
+  specialite: "",
+  service: "",
+  shift: ""
 };
+
 
 export default function DashboardAdmin() {
   const navigate = useNavigate();
   const nom = localStorage.getItem("nom");
   const prenom = localStorage.getItem("prenom");
+
+  const [form, setForm] = useState({
+  nom: "",
+  prenom: "",
+  email: "",
+  motDePasse: "",
+  role: "MEDECIN",
+  matricule: "",
+  specialite: "",
+  service: "",
+  shift: ""
+});
 
   const [users, setUsers] = useState<User[]>([]);
   const [selectedRole, setSelectedRole] = useState("medecin");
@@ -22,6 +40,19 @@ export default function DashboardAdmin() {
     localStorage.clear();
     navigate("/login");
   };
+
+  const redirectToAddpage = () => {
+    setSelectedRole("");
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  
+  //console.log(form);
+};
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  setForm({ ...form, [e.target.name]: e.target.value });
+};
 
   const fetchUsers = async () => {
     try {
@@ -63,46 +94,143 @@ export default function DashboardAdmin() {
             <h2 className="text-xl font-semibold mb-2">👩‍⚕️ Infirmiers</h2>
             <p className="text-slate-400">Gérer les infirmiers</p>
           </div>
-          <div onClick={() => {
-              console.log("TOKEN =", localStorage.getItem("token"));
-              navigate("/add-user");
-            }} className="bg-slate-800 rounded-xl p-6 cursor-pointer hover:bg-slate-700">
+          <div onClick={() => redirectToAddpage()} className="bg-slate-800 rounded-xl p-6 cursor-pointer hover:bg-slate-700">
             <h2 className="text-xl font-semibold mb-2">➕ Créer un compte</h2>
             <p className="text-slate-400">Ajouter médecin ou infirmier</p>
           </div>
         </div>
         <div className="mt-8 bg-slate-800 rounded-xl p-4">
-  <h2 className="text-xl mb-4">Liste</h2>
+  
 
-  <table className="w-full text-left">
-    <thead>
-      <tr className="border-b border-slate-600">
-        <th className="p-2">Nom</th>
-        <th className="p-2">Prénom</th>
-        <th className="p-2">Email</th>
-        <th className="p-2">Actions</th>
-      </tr>
-    </thead>
+    {selectedRole !== "" && (
+  <div>
+        <h2 className="text-xl mb-4">Liste</h2>
+      <table className="w-full text-left">
+        <thead>
+          <tr className="border-b border-slate-600">
+            <th className="p-2">Nom</th>
+            <th className="p-2">Prénom</th>
+            <th className="p-2">Email</th>
+            <th className="p-2">Actions</th>
+          </tr>
+        </thead>
 
-    <tbody>
-      {filteredUsers.map((u, index) => (
-        <tr key={index} className="border-b border-slate-700">
-          <td className="p-2">{u.nom}</td>
-          <td className="p-2">{u.prenom}</td>
-          <td className="p-2">{u.email}</td>
+        <tbody>
+          {filteredUsers.map((u, index) => (
+            <tr key={index} className="border-b border-slate-700">
+              <td className="p-2">{u.nom}</td>
+              <td className="p-2">{u.prenom}</td>
+              <td className="p-2">{u.email}</td>
 
-          <td className="p-2 flex gap-2">
-            <button className="bg-yellow-500 px-2 py-1 rounded">
-              Modifier
-            </button>
-            <button className="bg-red-600 px-2 py-1 rounded">
-              Supprimer
-            </button>
-          </td>
-        </tr>
-      ))}
-    </tbody>
-  </table>
+              <td className="p-2 flex gap-2">
+                <button className="bg-yellow-500 px-2 py-1 rounded">
+                  Modifier
+                </button>
+                <button className="bg-red-600 px-2 py-1 rounded">
+                  Supprimer
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  )}
+
+    {selectedRole === "" && (
+  <form
+    onSubmit={handleSubmit}
+    className="mt-8 bg-slate-800 p-6 rounded-xl max-w-md mx-auto flex flex-col gap-4"
+  >
+    <h2 className="text-xl font-bold text-center mb-2">
+      ➕ Créer un utilisateur
+    </h2>
+
+    <input
+      name="nom"
+      onChange={handleChange}
+      placeholder="Nom"
+      className="p-2 rounded bg-slate-900 border border-slate-700 focus:outline-none"
+    />
+
+    <input
+      name="prenom"
+      onChange={handleChange}
+      placeholder="Prénom"
+      className="p-2 rounded bg-slate-900 border border-slate-700"
+    />
+
+    <input
+      name="email"
+      onChange={handleChange}
+      placeholder="Email"
+      className="p-2 rounded bg-slate-900 border border-slate-700"
+    />
+
+    <input
+      name="motDePasse"
+      type="password"
+      onChange={handleChange}
+      placeholder="Mot de passe"
+      className="p-2 rounded bg-slate-900 border border-slate-700"
+    />
+
+    <select
+      name="role"
+      onChange={handleChange}
+      className="p-2 rounded bg-slate-900 border border-slate-700"
+    >
+      <option value="MEDECIN">Médecin</option>
+      <option value="INFIRMIER">Infirmier</option>
+    </select>
+   {form.role === "MEDECIN" && (
+  <div className="flex flex-col gap-3">
+    <input
+      name="matricule"
+      onChange={handleChange}
+      placeholder="Matricule"
+      className="p-2 rounded bg-slate-900 border border-slate-700"
+    />
+    <input
+      name="specialite"
+      onChange={handleChange}
+      placeholder="Spécialité"
+      className="p-2 rounded bg-slate-900 border border-slate-700"
+    />
+  </div>
+)}
+
+{form.role === "INFIRMIER" && (
+  <div className="flex flex-col gap-3">
+    <input
+      name="matricule"
+      onChange={handleChange}
+      placeholder="Matricule"
+      className="p-2 rounded bg-slate-900 border border-slate-700"
+    />
+    <input
+      name="service"
+      onChange={handleChange}
+      placeholder="Service"
+      className="p-2 rounded bg-slate-900 border border-slate-700"
+    />
+    <input
+      name="shift"
+      onChange={handleChange}
+      placeholder="Shift"
+      className="p-2 rounded bg-slate-900 border border-slate-700"
+    />
+  </div>
+)}
+      
+    <button
+      type="submit"
+      className="bg-blue-600 py-2 rounded hover:bg-blue-700 transition"
+    >
+      Créer
+    </button>
+  </form>
+)}
 </div>
       </div>
     </div>
