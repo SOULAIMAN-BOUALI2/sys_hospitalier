@@ -37,16 +37,43 @@ class LoginActivity : AppCompatActivity() {
             binding.btnLogin.isEnabled = false
 
             lifecycleScope.launch {
-                val result = AuthRepository.login(email, pass)
+                try {
+                    val result = AuthRepository.login(email, pass)
 
-                if (result != null) {
-                    val (role, userId) = result
-                    Toast.makeText(this@LoginActivity, "Bienvenue !", Toast.LENGTH_SHORT).show()
-                    // Redirection dashboard à faire au sprint suivant
-                    binding.btnLogin.isEnabled = true
+                    if (result != null) {
+                        val (role, userId) = result
+                        Toast.makeText(this@LoginActivity, "Bienvenue !", Toast.LENGTH_SHORT).show()
 
-                } else {
-                    Toast.makeText(this@LoginActivity, "Email ou mot de passe incorrect", Toast.LENGTH_SHORT).show()
+                        val targetActivity = when (role) {
+                            "medecin"   -> DashboardMedecinActivity::class.java
+                            "infirmier" -> DashboardInfirmierActivity::class.java
+                            else        -> DashboardAdminActivity::class.java
+                        }
+
+                        val intent = Intent(this@LoginActivity, targetActivity).apply {
+                            putExtra("USER_ID", userId)
+                            putExtra("USER_ROLE", role)
+                            flags = Intent.FLAG_ACTIVITY_NEW_TASK or
+                                    Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        }
+                        startActivity(intent)
+
+                    } else {
+                        Toast.makeText(
+                            this@LoginActivity,
+                            "Email ou mot de passe incorrect",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        binding.btnLogin.isEnabled = true
+                    }
+
+                } catch (e: Exception) {
+                    android.util.Log.e("LOGIN_ERROR", "Erreur: ${e.message}", e)
+                    Toast.makeText(
+                        this@LoginActivity,
+                        "Erreur réseau, réessayez",
+                        Toast.LENGTH_SHORT
+                    ).show()
                     binding.btnLogin.isEnabled = true
                 }
             }
@@ -56,13 +83,12 @@ class LoginActivity : AppCompatActivity() {
     private fun setupPasswordToggle() {
         binding.tvShowPassword.setOnClickListener {
             isPasswordVisible = !isPasswordVisible
-            if (isPasswordVisible) {
-                binding.etPassword.inputType = InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
-                binding.tvShowPassword.text = "Cacher"
+            binding.etPassword.inputType = if (isPasswordVisible) {
+                InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
             } else {
-                binding.etPassword.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
-                binding.tvShowPassword.text = "Voir"
+                InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
             }
+            binding.tvShowPassword.text = if (isPasswordVisible) "Cacher" else "Voir"
             binding.etPassword.setSelection(binding.etPassword.text.length)
         }
     }
