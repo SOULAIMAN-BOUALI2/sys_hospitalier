@@ -63,6 +63,43 @@ public class AdminService {
             infirmierRepository.save(i);
         }
     }
+
+    public void updateUser(String oldEmail, UserDetailsResponse request) {
+        System.out.println("-----------------------------"+oldEmail);
+
+        Utilisateur u = utilisateurRepository.findByEmail(oldEmail)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // ✅ update user
+        u.setNom(request.getNom());
+        u.setPrenom(request.getPrenom());
+        u.setEmail(request.getEmail());
+
+        utilisateurRepository.save(u);
+
+        // ✅ update medecin
+        if (u.getRole().equals("MEDECIN")) {
+
+            Medecin m = medecinRepository.findByUtilisateur(u);
+
+            m.setMatricule(request.getMatricule());
+            m.setSpecialite(request.getSpecialite());
+
+            medecinRepository.save(m);
+        }
+
+        // ✅ update infirmier
+        if (u.getRole().equals("INFIRMIER")) {
+
+            Infirmier i = infirmierRepository.findByUtilisateur(u);
+
+            i.setMatricule(request.getMatricule());
+            i.setService(request.getService());
+            i.setShift(request.getShift());
+
+            infirmierRepository.save(i);
+        }
+    }
     @Transactional
     public void deleteUser(String email) {
 
@@ -104,7 +141,6 @@ public class AdminService {
             response.setService(i.getService());
             response.setShift(i.getShift());
         }
-        //System.out.println("---------------------------------------------------------------------"+ response.getNom());
         return response;
     }
 }

@@ -45,6 +45,14 @@ public class AdminController {
     public void deleteUser(@PathVariable String email) {
         adminService.deleteUser(email);
     }
+    @PutMapping("/update-user/{email}")
+    public void updateUser(
+            @PathVariable String email,
+            @RequestBody UserDetailsResponse request
+    ) {
+        System.out.println("-----------------------------"+email);
+        adminService.updateUser(email, request);
+    }
 
     @GetMapping("/user/{email}")
     public UserDetailsResponse getUser(@PathVariable String email) {

@@ -1,17 +1,36 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { ArrowLeft, Save, User, ShieldCheck } from "lucide-react"; // Optional: Icons make it look premium
+import axios from "axios";
 
 export default function UpdateUserPage() {
   const location = useLocation();
   const navigate = useNavigate();
   const [form, setForm] = useState(location.state || {});
 
-  const handleChange = (
+const oldEmail = location.state.email;
+
+const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
+
+  const handleSubmit = async (oldEmail: string) => {
+  const token = localStorage.getItem("token");
+
+  await axios.put(
+    `http://localhost:8080/api/update-user/${oldEmail}`,
+    form,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }
+  );
+
+  alert("Utilisateur modifié !");
+};
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 font-sans antialiased">
@@ -133,7 +152,7 @@ export default function UpdateUserPage() {
             >
               Annuler
             </button>
-            <button className="flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-6 py-2 rounded-lg font-semibold transition-all shadow-lg shadow-blue-900/20 active:scale-95">
+            <button onClick={() => handleSubmit(oldEmail)} className="flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-6 py-2 rounded-lg font-semibold transition-all shadow-lg shadow-blue-900/20 active:scale-95">
               <Save size={18} />
               Sauvegarder les modifications
             </button>
