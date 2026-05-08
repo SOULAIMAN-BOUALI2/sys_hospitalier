@@ -7,6 +7,7 @@ import com.hospital.hospital_management_pfa.model.Utilisateur;
 import com.hospital.hospital_management_pfa.repository.InfirmierRepository;
 import com.hospital.hospital_management_pfa.repository.MedecinRepository;
 import com.hospital.hospital_management_pfa.repository.UtilisateurRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -60,5 +61,17 @@ public class AdminService {
 
             infirmierRepository.save(i);
         }
+    }
+    @Transactional
+    public void deleteUser(String email) {
+
+        Utilisateur user = utilisateurRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        System.out.println("-----------------recived to delete --------------"+ email);
+
+        medecinRepository.deleteByUtilisateur(user);
+        infirmierRepository.deleteByUtilisateur(user);
+
+        utilisateurRepository.delete(user);
     }
 }

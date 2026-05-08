@@ -1,7 +1,7 @@
 import { redirect, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { getUsers } from "../../services/authService";
-import { createUser } from "../../services/userService";
+import { createUser, updateUserPage, deleteUser } from "../../services/userService";
 
 // ✅ mettre type en dehors du composant
 type User = {
@@ -35,7 +35,7 @@ export default function DashboardAdmin() {
 });
 
   const [users, setUsers] = useState<User[]>([]);
-  const [selectedRole, setSelectedRole] = useState("medecin");
+  const [selectedRole, setSelectedRole] = useState("MEDECIN");
 
   const handleLogout = () => {
     localStorage.clear();
@@ -45,6 +45,14 @@ export default function DashboardAdmin() {
   const redirectToAddpage = () => {
     setSelectedRole("");
   }
+
+  const modifieUser = (email: string) => {
+  updateUserPage(email);
+}
+
+const supprimerUser = (email: string) => {
+  deleteUser(email);
+}
 
   const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault();
@@ -89,7 +97,7 @@ export default function DashboardAdmin() {
         <p className="text-slate-400 mb-8">Bienvenue, {prenom} {nom}</p>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div onClick={() => setSelectedRole("medecin")} className="bg-slate-800 rounded-xl p-6 cursor-pointer hover:bg-slate-700">
+          <div onClick={() => setSelectedRole("MEDECIN")} className="bg-slate-800 rounded-xl p-6 cursor-pointer hover:bg-slate-700">
             <h2 className="text-xl font-semibold mb-2">👨‍⚕️ Médecins</h2>
             <p className="text-slate-400">Gérer les médecins</p>
           </div>
@@ -126,10 +134,10 @@ export default function DashboardAdmin() {
               <td className="p-2">{u.email}</td>
 
               <td className="p-2 flex gap-2">
-                <button className="bg-yellow-500 px-2 py-1 rounded">
+                <button onClick={() => modifieUser(u.email)} className="bg-yellow-500 px-2 py-1 rounded">
                   Modifier
                 </button>
-                <button className="bg-red-600 px-2 py-1 rounded">
+                <button onClick={() => supprimerUser(u.email)} className="bg-red-600 px-2 py-1 rounded">
                   Supprimer
                 </button>
               </td>

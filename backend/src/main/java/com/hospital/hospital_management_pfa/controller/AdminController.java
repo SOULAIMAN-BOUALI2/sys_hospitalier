@@ -40,4 +40,8 @@ public class AdminController {
     public Medecin update(@PathVariable Long id, @RequestBody Medecin m) {
         return medecinService.updateMedecin(id, m);
     }
+    @DeleteMapping("/delete-user/{email}")
+    public void deleteUser(@PathVariable String email) {
+        adminService.deleteUser(email);
+    }
 }

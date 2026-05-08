@@ -8,6 +8,7 @@ public class Medecin {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_medecin")
     private Long id;
 
     private String matricule;
