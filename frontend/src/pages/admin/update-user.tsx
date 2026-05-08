@@ -30,6 +30,7 @@ const handleChange = (
   );
 
   alert("Utilisateur modifié !");
+  navigate(-1)
 };
 
   return (
