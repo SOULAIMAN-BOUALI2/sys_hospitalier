@@ -27,10 +27,12 @@ export const updateUser = async (id: number, data: any) => {
 };
 
 export const updateUserPage = async (email: string) => {
-    console.log("clidek modif");
+
   const token = localStorage.getItem("token");
 
-  return axios.put(`${BASE_URL}/update-user/${email}`, {
-    headers: { Authorization: `Bearer ${token}` }
+  return axios.get(`${BASE_URL}/user/${email}`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
   });
 };

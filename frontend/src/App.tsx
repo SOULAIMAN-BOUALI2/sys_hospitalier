@@ -4,6 +4,9 @@ import DashboardAdmin from "./pages/admin/DashboardAdmin";
 import DashboardMedecin from "./pages/medecin/DashboardMedecin";
 import DashboardInfirmier from "./pages/infirmier/DashboardInfirmier";
 import type { ReactNode } from "react"; // ✅ import ajouté
+import UpdateUserPage from "./pages/admin/update-user";
+import AddUserPage from "./pages/admin/AddUserPage";
+
 
 
 function PrivateRoute({ children, role }: { children: ReactNode, role: string }) { // ✅ ReactNode au lieu de JSX.Element
@@ -25,6 +28,18 @@ function App() {
         <Route path="/admin/dashboard" element={
           <PrivateRoute role="ADMIN">
             <DashboardAdmin />
+          </PrivateRoute>
+        } />
+
+        <Route path="/admin/add-user" element={       // ✅ AJOUTE
+          <PrivateRoute role="ADMIN">
+            <AddUserPage />
+          </PrivateRoute>
+        } />
+
+        <Route path="/admin/update-user" element={    // ✅ AJOUTE
+          <PrivateRoute role="ADMIN">
+            <UpdateUserPage />
           </PrivateRoute>
         } />
 

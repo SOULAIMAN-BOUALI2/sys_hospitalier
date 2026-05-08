@@ -1,6 +1,8 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import LoginPage from "../pages/auth/LoginPage";
 import AddUserPage from "../pages/admin/AddUserPage";
+import UpdateUserPage from "../pages/admin/update-user";
+import PrivateRoute from "./PrivateRoute";
 
 
 export default function AppRoutes() {
@@ -11,6 +13,12 @@ export default function AppRoutes() {
       <Route path="/login" element={<LoginPage />} />
 
       <Route path="/addUser" element={<AddUserPage />} />
+      <Route path="/admin/update-user" element={
+    <PrivateRoute>
+      <UpdateUserPage />
+    </PrivateRoute>
+  } />
+
     </Routes>
   );
 }

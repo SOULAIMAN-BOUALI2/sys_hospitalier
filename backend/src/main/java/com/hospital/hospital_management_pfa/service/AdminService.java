@@ -1,6 +1,7 @@
 package com.hospital.hospital_management_pfa.service;
 
 import com.hospital.hospital_management_pfa.dto.CreateUtilisateurRequest;
+import com.hospital.hospital_management_pfa.dto.UserDetailsResponse;
 import com.hospital.hospital_management_pfa.model.Infirmier;
 import com.hospital.hospital_management_pfa.model.Medecin;
 import com.hospital.hospital_management_pfa.model.Utilisateur;
@@ -73,5 +74,37 @@ public class AdminService {
         infirmierRepository.deleteByUtilisateur(user);
 
         utilisateurRepository.delete(user);
+    }
+
+    public UserDetailsResponse getUser(String email) {
+
+        Utilisateur u = utilisateurRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        UserDetailsResponse response = new UserDetailsResponse();
+
+        response.setNom(u.getNom());
+        response.setPrenom(u.getPrenom());
+        response.setEmail(u.getEmail());
+        response.setRole(u.getRole());
+
+        if (u.getRole().equals("MEDECIN")) {
+
+            Medecin m = medecinRepository.findByUtilisateur(u);
+
+            response.setMatricule(m.getMatricule());
+            response.setSpecialite(m.getSpecialite());
+        }
+
+        if (u.getRole().equals("INFIRMIER")) {
+
+            Infirmier i = infirmierRepository.findByUtilisateur(u);
+
+            response.setMatricule(i.getMatricule());
+            response.setService(i.getService());
+            response.setShift(i.getShift());
+        }
+        //System.out.println("---------------------------------------------------------------------"+ response.getNom());
+        return response;
     }
 }

@@ -1,22 +1,24 @@
 package com.hospital.hospital_management_pfa.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
-public class CreateUtilisateurRequest {
+public class UserDetailsResponse {
+
     private String nom;
     private String prenom;
     private String email;
-    private String motDePasse;
     private String role;
 
     private String matricule;
     private String specialite;
+
     private String service;
     private String shift;
-
 }

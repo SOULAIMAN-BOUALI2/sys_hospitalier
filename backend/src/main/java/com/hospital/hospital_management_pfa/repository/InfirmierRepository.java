@@ -8,4 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface InfirmierRepository extends JpaRepository<Infirmier, Long>  {
 
     void deleteByUtilisateur(Utilisateur utilisateur);
+    Infirmier findByUtilisateur(Utilisateur utilisateur);
+
 }

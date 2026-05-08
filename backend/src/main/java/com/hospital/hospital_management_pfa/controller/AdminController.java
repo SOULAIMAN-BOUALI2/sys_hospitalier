@@ -1,6 +1,7 @@
 package com.hospital.hospital_management_pfa.controller;
 
 import com.hospital.hospital_management_pfa.dto.CreateUtilisateurRequest;
+import com.hospital.hospital_management_pfa.dto.UserDetailsResponse;
 import com.hospital.hospital_management_pfa.model.Medecin;
 import com.hospital.hospital_management_pfa.model.Utilisateur;
 import com.hospital.hospital_management_pfa.repository.UtilisateurRepository;
@@ -43,5 +44,10 @@ public class AdminController {
     @DeleteMapping("/delete-user/{email}")
     public void deleteUser(@PathVariable String email) {
         adminService.deleteUser(email);
+    }
+
+    @GetMapping("/user/{email}")
+    public UserDetailsResponse getUser(@PathVariable String email) {
+        return adminService.getUser(email);
     }
 }

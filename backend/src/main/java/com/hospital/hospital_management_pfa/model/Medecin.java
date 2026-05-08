@@ -52,4 +52,6 @@ public class Medecin {
     public void setMatricule(String matricule) {
         this.matricule = matricule;
     }
+
+
 }
