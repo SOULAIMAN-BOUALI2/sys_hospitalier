@@ -82,5 +82,15 @@ class DashboardMedecinActivity : AppCompatActivity() {
 
             startActivity(intent)
         }
+
+        binding.tvVoirTout.setOnClickListener {
+
+            val intent = Intent(
+                this,
+                AllPatientsActivity::class.java
+            )
+
+            startActivity(intent)
+        }
     }
 }

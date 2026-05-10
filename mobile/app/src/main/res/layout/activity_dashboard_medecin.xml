@@ -212,6 +212,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"/>
             <TextView
+                android:id="@+id/tvVoirTout"
                 android:text="Voir tout"
                 android:textSize="11sp"
                 android:textColor="#1A237E"

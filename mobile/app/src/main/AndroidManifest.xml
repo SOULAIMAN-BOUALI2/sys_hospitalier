@@ -14,6 +14,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SYSTEMHOSPITALIER">
         <activity
+            android:name=".activities.AllPatientsActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.AddPatientActivity"
             android:exported="false" />
         <activity

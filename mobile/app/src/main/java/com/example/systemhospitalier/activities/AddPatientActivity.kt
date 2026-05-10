@@ -128,6 +128,7 @@ class AddPatientActivity : AppCompatActivity() {
                         "Patient ajouté",
                         Toast.LENGTH_SHORT
                     ).show()
+                    finish()
 
                 } catch (e: Exception) {
 
