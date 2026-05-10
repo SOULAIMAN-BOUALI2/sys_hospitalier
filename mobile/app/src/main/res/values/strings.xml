@@ -1,3 +1,18 @@
 <resources>
     <string name="app_name">SYSTEMHOSPITALIER</string>
+        <string name="titre_dossier">Nouveau Dossier Patient</string>
+        <string name="sous_titre_dossier">Informations basées sur le registre hospitalier</string>
+        <string name="label_identification">IDENTIFICATION</string>
+        <string name="hint_numero_dossier">Numéro de Dossier</string>
+        <string name="hint_nom">Nom</string>
+        <string name="hint_prenom">Prénom</string>
+        <string name="hint_date_naissance">Date Naissance</string>
+        <string name="hint_sexe">Sexe</string>
+        <string name="label_details">DÉTAILS MÉDICAUX ET ADRESSE</string>
+        <string name="hint_groupe_sanguin">Groupe Sanguin</string>
+        <string name="hint_adresse">Adresse Résidentielle</string>
+        <string name="label_urgence">PERSONNE A PREVENIR EN CAS D URGENCE</string>
+        <string name="hint_personne_urgence">Nom Personne Urgence</string>
+        <string name="hint_telephone_urgence">Téléphone Urgence</string>
+        <string name="btn_creer_patient">CRÉER LE PATIENT</string>
 </resources>

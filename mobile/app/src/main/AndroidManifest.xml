@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SYSTEMHOSPITALIER">
         <activity
-            android:name=".AddPatientActivity"
+            android:name=".activities.AddPatientActivity"
             android:exported="false" />
         <activity
             android:name=".DashboardAdminActivity"
@@ -23,10 +23,10 @@
             android:name=".DashboardInfirmierActivity"
             android:exported="false" />
         <activity
-            android:name=".DashboardMedecinActivity"
+            android:name=".activities.DashboardMedecinActivity"
             android:exported="false" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".activities.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

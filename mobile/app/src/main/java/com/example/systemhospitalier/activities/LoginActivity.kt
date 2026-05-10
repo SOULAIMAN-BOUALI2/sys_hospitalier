@@ -1,11 +1,17 @@
-package com.example.systemhospitalier
+package com.example.systemhospitalier.activities
 
 import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.example.systemhospitalier.AuthRepository
+import com.example.systemhospitalier.DashboardAdminActivity
+import com.example.systemhospitalier.DashboardInfirmierActivity
+import com.example.systemhospitalier.activities.DashboardMedecinActivity
+import com.example.systemhospitalier.SignupActivity
 import com.example.systemhospitalier.databinding.ActivityLoginBinding
 import kotlinx.coroutines.launch
 
@@ -68,7 +74,7 @@ class LoginActivity : AppCompatActivity() {
                     }
 
                 } catch (e: Exception) {
-                    android.util.Log.e("LOGIN_ERROR", "Erreur: ${e.message}", e)
+                    Log.e("LOGIN_ERROR", "Erreur: ${e.message}", e)
                     Toast.makeText(
                         this@LoginActivity,
                         "Erreur réseau, réessayez",

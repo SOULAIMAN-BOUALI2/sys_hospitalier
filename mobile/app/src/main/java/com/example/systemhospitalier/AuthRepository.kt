@@ -1,5 +1,6 @@
 package com.example.systemhospitalier
 
+import com.example.systemhospitalier.network.SupabaseClient
 import io.github.jan.supabase.postgrest.postgrest
 import io.github.jan.supabase.postgrest.query.Columns
 import java.security.MessageDigest

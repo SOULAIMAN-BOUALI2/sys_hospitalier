@@ -1,15 +1,18 @@
-package com.example.systemhospitalier
+package com.example.systemhospitalier.activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.systemhospitalier.R
 import androidx.lifecycle.lifecycleScope
+import com.example.systemhospitalier.activities.AddPatientActivity
+import com.example.systemhospitalier.Medecin
+import com.example.systemhospitalier.network.SupabaseClient
+import com.example.systemhospitalier.Utilisateur
 import com.example.systemhospitalier.databinding.ActivityDashboardMedecinBinding
 import io.github.jan.supabase.postgrest.postgrest
 import kotlinx.coroutines.launch
+
 class DashboardMedecinActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDashboardMedecinBinding
 
