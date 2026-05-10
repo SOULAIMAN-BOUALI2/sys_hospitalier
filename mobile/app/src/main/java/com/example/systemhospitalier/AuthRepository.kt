@@ -3,30 +3,32 @@ package com.example.systemhospitalier
 import io.github.jan.supabase.postgrest.postgrest
 import io.github.jan.supabase.postgrest.query.Columns
 import java.security.MessageDigest
+import org.mindrot.jbcrypt.BCrypt
 
 object AuthRepository {
 
     // SHA-256 hash
     private fun hashPassword(password: String): String {
-        val bytes = MessageDigest.getInstance("SHA-256").digest(password.toByteArray())
-        return bytes.joinToString("") { "%02x".format(it) }
+        return BCrypt.hashpw(password, BCrypt.gensalt())
     }
 
     // ── LOGIN ────────────────────────────────────────────────────────────────
     suspend fun login(email: String, password: String): Pair<String, Long>? {
-        val hashed = hashPassword(password)
 
         val result = SupabaseClient.client.postgrest
             .from("utilisateur")
             .select {
                 filter {
                     eq("email", email)
-                    eq("mot_de_passe", hashed)
                 }
             }
             .decodeSingleOrNull<Utilisateur>()
 
         result ?: return null
+
+        if (!BCrypt.checkpw(password, result.motDePasse)) {
+            return null
+        }
 
         // Vérifie si c'est un médecin
         val medecin = SupabaseClient.client.postgrest

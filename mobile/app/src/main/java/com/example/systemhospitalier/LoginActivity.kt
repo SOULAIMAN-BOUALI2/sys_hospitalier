@@ -42,12 +42,12 @@ class LoginActivity : AppCompatActivity() {
 
                     if (result != null) {
                         val (role, userId) = result
-                        Toast.makeText(this@LoginActivity, "Bienvenue !", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@LoginActivity, "Bienvenue ! $role", Toast.LENGTH_SHORT).show()
 
                         val targetActivity = when (role) {
-                            "medecin"   -> DashboardMedecinActivity::class.java
+                            "medecin" -> DashboardMedecinActivity::class.java
                             "infirmier" -> DashboardInfirmierActivity::class.java
-                            else        -> DashboardAdminActivity::class.java
+                            else -> DashboardAdminActivity::class.java
                         }
 
                         val intent = Intent(this@LoginActivity, targetActivity).apply {

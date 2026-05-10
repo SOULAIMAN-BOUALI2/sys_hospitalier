@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F7FA"
+    android:background="#F8FAFC"
     android:fillViewport="true">
 
     <LinearLayout
@@ -11,411 +11,220 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- Header Banner -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="180dp"
-            android:background="#0D47A1"
+            android:layout_height="200dp"
+            android:background="#1A237E"
             android:orientation="vertical"
             android:paddingStart="24dp"
             android:paddingEnd="24dp"
-            android:paddingTop="40dp"
-            android:paddingBottom="24dp">
+            android:paddingTop="40dp">
 
             <TextView
-                android:text="TABLEAU DE BORD"
-                android:textColor="#90CAF9"
+                android:text="ESPACE MÉDECIN"
+                android:textColor="#9FA8DA"
                 android:textSize="11sp"
                 android:letterSpacing="0.15"
+                android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
             <TextView
+                android:id="@+id/tvWelcome"
                 android:text="Dr. Bouali"
                 android:textColor="#FFFFFF"
-                android:textSize="26sp"
+                android:textSize="28sp"
                 android:textStyle="bold"
                 android:layout_marginTop="4dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
             <TextView
-                android:text="Cardiologue  •  Lundi 06 Avril 2026"
-                android:textColor="#BBDEFB"
-                android:textSize="13sp"
+                android:id="@+id/tvSpecialite"
+                android:text="Cardiologie"
+                android:textColor="#C5CAE9"
+                android:textSize="14sp"
+                android:layout_marginTop="4dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:id="@+id/tvMatricule"
+                android:text="MAT-001"
+                android:textColor="#9FA8DA"
+                android:textSize="12sp"
                 android:layout_marginTop="4dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
         </LinearLayout>
 
-        <!-- Stats Cards -->
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:columnCount="2"
+            android:padding="12dp"
+            android:layout_marginTop="-40dp">
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardNewPatient"
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                android:layout_columnWeight="1"
+                android:layout_margin="8dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp">
+                <LinearLayout
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <ImageView android:layout_width="32dp" android:layout_height="32dp" android:src="@android:drawable/ic_menu_add" app:tint="#1A237E"/>
+                    <TextView android:text="Patient" android:layout_marginTop="8dp" android:textStyle="bold" android:textColor="#1A237E" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardConsultation"
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                android:layout_columnWeight="1"
+                android:layout_margin="8dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp">
+                <LinearLayout
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <ImageView android:layout_width="32dp" android:layout_height="32dp" android:src="@android:drawable/ic_menu_edit" app:tint="#2E7D32"/>
+                    <TextView android:text="Consultation" android:layout_marginTop="8dp" android:textStyle="bold" android:textColor="#2E7D32" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardHospitalisation"
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                android:layout_columnWeight="1"
+                android:layout_margin="8dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp">
+                <LinearLayout
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <ImageView android:layout_width="32dp" android:layout_height="32dp" android:src="@android:drawable/ic_dialog_map" app:tint="#E65100"/>
+                    <TextView android:text="Hospitaliser" android:layout_marginTop="8dp" android:textStyle="bold" android:textColor="#E65100" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardAI"
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                android:layout_columnWeight="1"
+                android:layout_margin="8dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp"
+                app:cardBackgroundColor="#F3E5F5">
+                <LinearLayout
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <ImageView android:layout_width="32dp" android:layout_height="32dp" android:src="@android:drawable/ic_menu_day" app:tint="#7B1FA2"/>
+                    <TextView android:text="IA Assist" android:layout_marginTop="8dp" android:textStyle="bold" android:textColor="#7B1FA2" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+        </GridLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
-            android:layout_marginTop="-28dp"
-            android:layout_marginBottom="8dp">
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:text="PROTOCOLE IA (OLLAMA)"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:textColor="#7B1FA2"
+                android:letterSpacing="0.1"
+                android:layout_marginBottom="8dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
 
             <androidx.cardview.widget.CardView
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginEnd="8dp"
-                app:cardCornerRadius="10dp"
-                app:cardElevation="6dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp"
                 app:cardBackgroundColor="#FFFFFF">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="16dp"
-                    android:gravity="center">
+                    android:padding="16dp">
 
                     <TextView
-                        android:text="8"
-                        android:textSize="32sp"
-                        android:textStyle="bold"
-                        android:textColor="#0D47A1"
-                        android:layout_width="wrap_content"
+                        android:id="@+id/tvAISuggestion"
+                        android:text="Cliquez sur IA Assist pour générer les étapes de prise en charge basées sur le diagnostic."
+                        android:textSize="14sp"
+                        android:lineSpacingExtra="4dp"
+                        android:textColor="#455A64"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"/>
 
                     <View
-                        android:layout_width="24dp"
-                        android:layout_height="2dp"
-                        android:background="#0D47A1"
-                        android:layout_marginTop="4dp"
-                        android:layout_marginBottom="4dp"/>
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#EEEEEE"
+                        android:layout_marginTop="12dp"
+                        android:layout_marginBottom="12dp"/>
 
-                    <TextView
-                        android:text="Rendez-vous"
-                        android:textSize="11sp"
-                        android:textColor="#78909C"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginStart="8dp"
-                app:cardCornerRadius="10dp"
-                app:cardElevation="6dp"
-                app:cardBackgroundColor="#FFFFFF">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp"
-                    android:gravity="center">
-
-                    <TextView
-                        android:text="2"
-                        android:textSize="32sp"
-                        android:textStyle="bold"
-                        android:textColor="#C62828"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-
-                    <View
-                        android:layout_width="24dp"
-                        android:layout_height="2dp"
-                        android:background="#C62828"
-                        android:layout_marginTop="4dp"
-                        android:layout_marginBottom="4dp"/>
-
-                    <TextView
-                        android:text="Urgences"
-                        android:textSize="11sp"
-                        android:textColor="#78909C"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                    <Button
+                        android:id="@+id/btnApplySteps"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Approuver les étapes"
+                        android:textSize="12sp"
+                        android:textAllCaps="false"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"/>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
         </LinearLayout>
 
-        <!-- Section Urgences -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:paddingStart="20dp"
             android:paddingEnd="20dp"
-            android:paddingTop="16dp"
-            android:paddingBottom="8dp"
+            android:paddingTop="8dp"
             android:gravity="center_vertical">
-
-            <View
-                android:layout_width="3dp"
-                android:layout_height="16dp"
-                android:background="#C62828"
-                android:layout_marginEnd="8dp"/>
-
             <TextView
-                android:text="CAS URGENTS"
+                android:text="PATIENTS RECENTS"
                 android:textSize="11sp"
                 android:textStyle="bold"
-                android:letterSpacing="0.12"
-                android:textColor="#455A64"
+                android:textColor="#546E7A"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
+            <TextView
+                android:text="Voir tout"
+                android:textSize="11sp"
+                android:textColor="#1A237E"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
         </LinearLayout>
 
-        <androidx.cardview.widget.CardView
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvRecentPatients"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="8dp"
-            app:cardCornerRadius="10dp"
-            app:cardElevation="3dp"
-            app:cardBackgroundColor="#FFFFFF">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="16dp"
-                android:gravity="center_vertical">
-
-                <View
-                    android:layout_width="4dp"
-                    android:layout_height="52dp"
-                    android:background="#C62828"
-                    android:layout_marginEnd="14dp"/>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:text="Youssef Ait Tmilla"
-                        android:textStyle="bold"
-                        android:textSize="15sp"
-                        android:textColor="#212121"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-
-                    <TextView
-                        android:text="Douleur thoracique intense"
-                        android:textSize="13sp"
-                        android:textColor="#607D8B"
-                        android:layout_marginTop="2dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-
-                    <TextView
-                        android:text="Arrivé il y a 5 min"
-                        android:textSize="11sp"
-                        android:textColor="#B0BEC5"
-                        android:layout_marginTop="2dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-                </LinearLayout>
-
-                <TextView
-                    android:text="URGENT"
-                    android:textSize="10sp"
-                    android:textStyle="bold"
-                    android:textColor="#FFFFFF"
-                    android:background="#C62828"
-                    android:paddingStart="8dp"
-                    android:paddingEnd="8dp"
-                    android:paddingTop="4dp"
-                    android:paddingBottom="4dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
-
-        <!-- Section RDV -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingStart="20dp"
-            android:paddingEnd="20dp"
-            android:paddingTop="16dp"
-            android:paddingBottom="8dp"
-            android:gravity="center_vertical">
-
-            <View
-                android:layout_width="3dp"
-                android:layout_height="16dp"
-                android:background="#0D47A1"
-                android:layout_marginEnd="8dp"/>
-
-            <TextView
-                android:text="RENDEZ-VOUS DU JOUR"
-                android:textSize="11sp"
-                android:textStyle="bold"
-                android:letterSpacing="0.12"
-                android:textColor="#455A64"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-        </LinearLayout>
-
-        <!-- RDV Item 1 -->
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="8dp"
-            app:cardCornerRadius="10dp"
-            app:cardElevation="2dp"
-            app:cardBackgroundColor="#FFFFFF">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="16dp"
-                android:gravity="center_vertical">
-
-                <LinearLayout
-                    android:layout_width="52dp"
-                    android:layout_height="52dp"
-                    android:background="#E3F2FD"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:text="09:00"
-                        android:textStyle="bold"
-                        android:textColor="#0D47A1"
-                        android:textSize="13sp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:layout_marginStart="14dp">
-
-                    <TextView
-                        android:text="Youssef Ait Tmilla"
-                        android:textStyle="bold"
-                        android:textSize="15sp"
-                        android:textColor="#212121"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-
-                    <TextView
-                        android:text="Consultation de suivi"
-                        android:textSize="13sp"
-                        android:textColor="#607D8B"
-                        android:layout_marginTop="2dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-                </LinearLayout>
-
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:src="@drawable/ic_arrow_forward"/>
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
-
-        <!-- RDV Item 2 -->
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="24dp"
-            app:cardCornerRadius="10dp"
-            app:cardElevation="2dp"
-            app:cardBackgroundColor="#FFFFFF">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="16dp"
-                android:gravity="center_vertical">
-
-                <LinearLayout
-                    android:layout_width="52dp"
-                    android:layout_height="52dp"
-                    android:background="#E3F2FD"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:text="11:00"
-                        android:textStyle="bold"
-                        android:textColor="#0D47A1"
-                        android:textSize="13sp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:layout_marginStart="14dp">
-
-                    <TextView
-                        android:text="Karim Idrissi"
-                        android:textStyle="bold"
-                        android:textSize="15sp"
-                        android:textColor="#212121"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-
-                    <TextView
-                        android:text="Première consultation"
-                        android:textSize="13sp"
-                        android:textColor="#607D8B"
-                        android:layout_marginTop="2dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-                </LinearLayout>
-
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:src="@drawable/ic_arrow_forward"/>
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
-
-        <!-- Actions -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
-            android:paddingBottom="24dp">
-
-            <Button
-                android:id="@+id/btnDossiers"
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_weight="1"
-                android:layout_marginEnd="8dp"
-                android:text="Dossiers médicaux"
-                android:backgroundTint="#0D47A1"
-                android:textColor="#FFFFFF"
-                android:textSize="13sp"
-                android:textAllCaps="false"
-                app:cornerRadius="8dp"/>
-
-
-        </LinearLayout>
+            android:padding="16dp"
+            android:nestedScrollingEnabled="false"/>
 
     </LinearLayout>
 </ScrollView>
