@@ -1,6 +1,5 @@
 package com.hospital.hospital_management_pfa.model;
 
-
 import jakarta.persistence.*;
 
 @Entity
@@ -37,7 +36,6 @@ public class Medecin {
         this.disponibilite = disponibilite;
     }
 
-
     public String getSpecialite() {
         return specialite;
     }
@@ -45,6 +43,7 @@ public class Medecin {
     public void setSpecialite(String specialite) {
         this.specialite = specialite;
     }
+
     public String getMatricule() {
         return matricule;
     }
@@ -53,5 +52,7 @@ public class Medecin {
         this.matricule = matricule;
     }
 
-
+    public Long getId() {
+        return this.id;
+    }
 }
