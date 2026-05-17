@@ -57,34 +57,34 @@ class DashboardMedecinActivity : AppCompatActivity() {
                 }
 
                 // Fetch last 5 patients
-                // Note: assuming "id" exists in the database table
                 val patients = withContext(Dispatchers.IO) {
                     SupabaseClient.client.postgrest
                         .from("patient")
                         .select {
-                            order("id", order = Order.DESCENDING)
+                            order("id_patient", order = Order.DESCENDING)
                             limit(5)
                         }
                         .decodeList<Patient>()
                 }
 
                 // Update UI on Main Thread
-                if (medecin != null) {
-                    binding.tvWelcome.text = "Bienvenue Dr ${medecin.specialite}"
-                    binding.tvSpecialite.text = medecin.specialite
-                    binding.tvMatricule.text = "Matricule : ${medecin.matricule}"
+                withContext(Dispatchers.Main) {
+                    if (medecin != null) {
+                        binding.tvWelcome.text = "Bienvenue Dr ${medecin.specialite}"
+                        binding.tvSpecialite.text = medecin.specialite
+                        binding.tvMatricule.text = "Matricule : ${medecin.matricule}"
 
-                    if (user != null) {
-                        binding.tvWelcome.text = "Dr ${user.nom} ${user.prenom}"
+                        if (user != null) {
+                            binding.tvWelcome.text = "Dr ${user.nom} ${user.prenom}"
+                        }
                     }
-                }
 
-                binding.rvRecentPatients.layoutManager = LinearLayoutManager(this@DashboardMedecinActivity)
-                binding.rvRecentPatients.adapter = PatientAdapter(patients)
+                    binding.rvRecentPatients.layoutManager = LinearLayoutManager(this@DashboardMedecinActivity)
+                    binding.rvRecentPatients.adapter = PatientAdapter(patients)
+                }
 
             } catch (e: Exception) {
                 Log.e("DASHBOARD", "Global error: ${e.message}")
-                // Fallback fetch without order if "id" fails
                 try {
                      val patientsFallback = withContext(Dispatchers.IO) {
                         SupabaseClient.client.postgrest
@@ -92,8 +92,10 @@ class DashboardMedecinActivity : AppCompatActivity() {
                             .select { limit(5) }
                             .decodeList<Patient>()
                     }
-                    binding.rvRecentPatients.layoutManager = LinearLayoutManager(this@DashboardMedecinActivity)
-                    binding.rvRecentPatients.adapter = PatientAdapter(patientsFallback)
+                    withContext(Dispatchers.Main) {
+                        binding.rvRecentPatients.layoutManager = LinearLayoutManager(this@DashboardMedecinActivity)
+                        binding.rvRecentPatients.adapter = PatientAdapter(patientsFallback)
+                    }
                 } catch (e2: Exception) {
                     Log.e("DASHBOARD", "Fallback error: ${e2.message}")
                 }
@@ -106,6 +108,13 @@ class DashboardMedecinActivity : AppCompatActivity() {
 
         binding.cardConsultation.setOnClickListener {
             val intent = Intent(this, ConsultationActivity::class.java).apply {
+                putExtra("USER_ID", userId)
+            }
+            startActivity(intent)
+        }
+
+        binding.cardHospitalisation.setOnClickListener {
+            val intent = Intent(this, HospitalisationActivity::class.java).apply {
                 putExtra("USER_ID", userId)
             }
             startActivity(intent)

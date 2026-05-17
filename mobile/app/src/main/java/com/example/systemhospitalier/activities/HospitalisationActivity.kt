@@ -6,9 +6,9 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.example.systemhospitalier.Consultation
+import com.example.systemhospitalier.Hospitalisation
 import com.example.systemhospitalier.Medecin
-import com.example.systemhospitalier.databinding.ActivityConsultationBinding
+import com.example.systemhospitalier.databinding.ActivityHospitalisationBinding
 import com.example.systemhospitalier.models.Patient
 import com.example.systemhospitalier.network.SupabaseClient
 import io.github.jan.supabase.postgrest.postgrest
@@ -19,22 +19,22 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-class ConsultationActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityConsultationBinding
+class HospitalisationActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityHospitalisationBinding
     private var patients: List<Patient> = emptyList()
     private var medecinId: Long = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityConsultationBinding.inflate(layoutInflater)
+        binding = ActivityHospitalisationBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         val userId = intent.getLongExtra("USER_ID", -1)
 
         loadInitialData(userId)
 
-        binding.btnSaveConsultation.setOnClickListener {
-            saveConsultation()
+        binding.btnSaveHospitalisation.setOnClickListener {
+            saveHospitalisation()
         }
     }
 
@@ -60,7 +60,7 @@ class ConsultationActivity : AppCompatActivity() {
 
                 withContext(Dispatchers.Main) {
                     val adapter = ArrayAdapter(
-                        this@ConsultationActivity,
+                        this@HospitalisationActivity,
                         android.R.layout.simple_spinner_dropdown_item,
                         patients.map { "${it.nom} ${it.prenom} (${it.numeroDossier})" }
                     )
@@ -68,15 +68,15 @@ class ConsultationActivity : AppCompatActivity() {
                 }
 
             } catch (e: Exception) {
-                Log.e("CONSULTATION", "Error loading data: ${e.message}")
+                Log.e("HOSPITALISATION", "Error loading data: ${e.message}")
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(this@ConsultationActivity, "Erreur de chargement", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@HospitalisationActivity, "Erreur de chargement", Toast.LENGTH_SHORT).show()
                 }
             }
         }
     }
 
-    private fun saveConsultation() {
+    private fun saveHospitalisation() {
         val selectedIndex = binding.spinnerPatient.selectedItemPosition
         if (selectedIndex < 0 || medecinId == -1L) {
             Toast.makeText(this, "Données invalides", Toast.LENGTH_SHORT).show()
@@ -84,13 +84,13 @@ class ConsultationActivity : AppCompatActivity() {
         }
 
         val patient = patients[selectedIndex]
-        val motif = binding.etMotif.text.toString()
-        val diagnostic = binding.etDiagnostic.text.toString()
-        val traitement = binding.etTraitement.text.toString()
-        val notes = binding.etNotes.text.toString()
+        val chambre = binding.etChambre.text.toString().trim()
+        val etat = binding.etEtat.text.toString().trim()
+        val motif = binding.etMotif.text.toString().trim()
+        val diagnostic = binding.etDiagnosticInitial.text.toString().trim()
 
-        if (motif.isEmpty() || diagnostic.isEmpty()) {
-            Toast.makeText(this, "Veuillez remplir le motif et le diagnostic", Toast.LENGTH_SHORT).show()
+        if (chambre.isEmpty() || motif.isEmpty() || diagnostic.isEmpty()) {
+            Toast.makeText(this, "Veuillez remplir tous les champs obligatoires", Toast.LENGTH_SHORT).show()
             return
         }
 
@@ -98,31 +98,31 @@ class ConsultationActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             try {
-                val consultation = Consultation(
-                    patientId = patient.idPatient,
-                    medecinId = medecinId,
-                    dateConsultation = currentDate,
+                val hospitalisation = Hospitalisation(
+                    dateAdmission = currentDate,
+                    chambre = chambre,
                     motif = motif,
-                    diagnostic = diagnostic,
-                    traitement = traitement,
-                    notes = notes
+                    etatPatient = etat,
+                    diagnosticInitial = diagnostic,
+                    idPatient = patient.idPatient,
+                    idMedecin = medecinId
                 )
 
                 withContext(Dispatchers.IO) {
                     SupabaseClient.client.postgrest
-                        .from("consultation")
-                        .insert(consultation)
+                        .from("hospitalisation")
+                        .insert(hospitalisation)
                 }
 
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(this@ConsultationActivity, "Consultation enregistrée !", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@HospitalisationActivity, "Hospitalisation enregistrée !", Toast.LENGTH_SHORT).show()
                     finish()
                 }
 
             } catch (e: Exception) {
-                Log.e("CONSULTATION", "Error saving: ${e.message}")
+                Log.e("HOSPITALISATION", "Error saving: ${e.message}")
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(this@ConsultationActivity, "Erreur lors de l'enregistrement", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@HospitalisationActivity, "Erreur lors de l'enregistrement", Toast.LENGTH_SHORT).show()
                 }
             }
         }

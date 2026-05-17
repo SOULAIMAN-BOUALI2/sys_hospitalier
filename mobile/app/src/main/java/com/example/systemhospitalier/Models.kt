@@ -1,4 +1,4 @@
-package com.example.systemhospitalier
+﻿package com.example.systemhospitalier
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -34,12 +34,25 @@ data class Infirmier(
 
 @Serializable
 data class Consultation(
-    @SerialName("id") val id: Long = 0,
+    @SerialName("id_consultation") val idConsultation: Long = 0,
     @SerialName("patient_id") val patientId: Long,
     @SerialName("medecin_id") val medecinId: Long,
-    @SerialName("date_consultation") val date: String,
+    @SerialName("date_consultation") val dateConsultation: String,
     @SerialName("motif") val motif: String,
     @SerialName("diagnostic") val diagnostic: String,
     @SerialName("traitement") val traitement: String,
     @SerialName("notes") val notes: String? = null
+)
+
+@Serializable
+data class Hospitalisation(
+    @SerialName("id_hosp") val idHosp: Long = 0,
+    @SerialName("date_admission") val dateAdmission: String,
+    @SerialName("date_sortie") val dateSortie: String? = null,
+    @SerialName("chambre") val chambre: String,
+    @SerialName("motif") val motif: String,
+    @SerialName("etat_patient") val etatPatient: String,
+    @SerialName("diagnostic_initial") val diagnosticInitial: String,
+    @SerialName("id_patient") val idPatient: Long,
+    @SerialName("id_medecin") val idMedecin: Long
 )
