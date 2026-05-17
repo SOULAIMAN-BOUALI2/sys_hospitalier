@@ -111,10 +111,11 @@ class AddPatientActivity : AppCompatActivity() {
                         .from("patient")
                         .insert(
                             Patient(
+                                idPatient = 0,
                                 nom = nom,
                                 prenom = prenom,
                                 numeroDossier = numero,
-                                dateNaissance = date,
+                                date = date,
                                 sexe = binding.autoSexe.text.toString(),
                                 adresse = adresse,
                                 groupeSanguin = binding.autoGroupeSanguin.text.toString(),

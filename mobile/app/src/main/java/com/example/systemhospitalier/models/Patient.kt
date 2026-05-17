@@ -6,6 +6,9 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Patient(
 
+    @SerialName("id_patient")
+    val idPatient: Long,
+
     @SerialName("nom")
     val nom: String,
 
@@ -16,7 +19,7 @@ data class Patient(
     val numeroDossier: String,
 
     @SerialName("date_naissance")
-    val dateNaissance: String,
+    val date: String,
 
     @SerialName("sexe")
     val sexe: String,

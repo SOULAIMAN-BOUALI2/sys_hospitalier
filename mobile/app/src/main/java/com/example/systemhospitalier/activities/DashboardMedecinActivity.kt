@@ -73,7 +73,7 @@ class DashboardMedecinActivity : AppCompatActivity() {
                     binding.tvWelcome.text = "Bienvenue Dr ${medecin.specialite}"
                     binding.tvSpecialite.text = medecin.specialite
                     binding.tvMatricule.text = "Matricule : ${medecin.matricule}"
-                    
+
                     if (user != null) {
                         binding.tvWelcome.text = "Dr ${user.nom} ${user.prenom}"
                     }
@@ -102,6 +102,13 @@ class DashboardMedecinActivity : AppCompatActivity() {
 
         binding.cardNewPatient.setOnClickListener {
             startActivity(Intent(this, AddPatientActivity::class.java))
+        }
+
+        binding.cardConsultation.setOnClickListener {
+            val intent = Intent(this, ConsultationActivity::class.java).apply {
+                putExtra("USER_ID", userId)
+            }
+            startActivity(intent)
         }
 
         binding.tvVoirTout.setOnClickListener {
