@@ -1,17 +1,23 @@
-package com.example.systemhospitalier.activities
+﻿package com.example.systemhospitalier.activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.example.systemhospitalier.activities.AddPatientActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.systemhospitalier.Medecin
-import com.example.systemhospitalier.network.SupabaseClient
 import com.example.systemhospitalier.Utilisateur
+import com.example.systemhospitalier.adapter.PatientAdapter
 import com.example.systemhospitalier.databinding.ActivityDashboardMedecinBinding
+import com.example.systemhospitalier.models.Patient
+import com.example.systemhospitalier.network.SupabaseClient
 import io.github.jan.supabase.postgrest.postgrest
+import io.github.jan.supabase.postgrest.query.Order
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class DashboardMedecinActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDashboardMedecinBinding
@@ -22,75 +28,84 @@ class DashboardMedecinActivity : AppCompatActivity() {
         binding = ActivityDashboardMedecinBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
         val userId = intent.getLongExtra("USER_ID", -1)
 
         lifecycleScope.launch {
-
-            val medecin = SupabaseClient.client.postgrest
-                .from("medecin")
-                .select {
-                    filter {
-                        eq("id_user", userId)
-                    }
+            try {
+                // Fetch medecin info
+                val medecin = withContext(Dispatchers.IO) {
+                    SupabaseClient.client.postgrest
+                        .from("medecin")
+                        .select {
+                            filter {
+                                eq("id_user", userId)
+                            }
+                        }
+                        .decodeSingleOrNull<Medecin>()
                 }
-                .decodeSingleOrNull<Medecin>()
 
-            val user = SupabaseClient.client.postgrest
-                .from("utilisateur")
-                .select {
-                    filter {
-                        eq("id", userId)
-                    }
+                // Fetch user info
+                val user = withContext(Dispatchers.IO) {
+                    SupabaseClient.client.postgrest
+                        .from("utilisateur")
+                        .select {
+                            filter {
+                                eq("id", userId)
+                            }
+                        }
+                        .decodeSingleOrNull<Utilisateur>()
                 }
-                .decodeSingleOrNull<Utilisateur>()
 
-            runOnUiThread {
+                // Fetch last 5 patients
+                // Note: assuming "id" exists in the database table
+                val patients = withContext(Dispatchers.IO) {
+                    SupabaseClient.client.postgrest
+                        .from("patient")
+                        .select {
+                            order("id", order = Order.DESCENDING)
+                            limit(5)
+                        }
+                        .decodeList<Patient>()
+                }
 
+                // Update UI on Main Thread
                 if (medecin != null) {
-                    Toast.makeText(
-                        this@DashboardMedecinActivity,
-                        medecin.specialite,
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    binding.tvWelcome.text = "Bienvenue Dr ${medecin.specialite}"
+                    binding.tvSpecialite.text = medecin.specialite
+                    binding.tvMatricule.text = "Matricule : ${medecin.matricule}"
+                    
+                    if (user != null) {
+                        binding.tvWelcome.text = "Dr ${user.nom} ${user.prenom}"
+                    }
                 }
-            }
-            if (medecin != null) {
 
-                binding.tvWelcome.text =
-                    "Bienvenue Dr ${medecin.specialite}"
+                binding.rvRecentPatients.layoutManager = LinearLayoutManager(this@DashboardMedecinActivity)
+                binding.rvRecentPatients.adapter = PatientAdapter(patients)
 
-                if (user != null && medecin != null) {
-
-                    binding.tvWelcome.text =
-                        "Dr ${user.nom} ${user.prenom}"
-
-                    binding.tvSpecialite.text =
-                        medecin.specialite
-
-                    binding.tvMatricule.text =
-                        "Matricule : ${medecin.matricule}"
+            } catch (e: Exception) {
+                Log.e("DASHBOARD", "Global error: ${e.message}")
+                // Fallback fetch without order if "id" fails
+                try {
+                     val patientsFallback = withContext(Dispatchers.IO) {
+                        SupabaseClient.client.postgrest
+                            .from("patient")
+                            .select { limit(5) }
+                            .decodeList<Patient>()
+                    }
+                    binding.rvRecentPatients.layoutManager = LinearLayoutManager(this@DashboardMedecinActivity)
+                    binding.rvRecentPatients.adapter = PatientAdapter(patientsFallback)
+                } catch (e2: Exception) {
+                    Log.e("DASHBOARD", "Fallback error: ${e2.message}")
                 }
             }
         }
+
         binding.cardNewPatient.setOnClickListener {
-
-            val intent = Intent(
-                this,
-                AddPatientActivity::class.java
-            )
-
-            startActivity(intent)
+            startActivity(Intent(this, AddPatientActivity::class.java))
         }
 
         binding.tvVoirTout.setOnClickListener {
-
-            val intent = Intent(
-                this,
-                AllPatientsActivity::class.java
-            )
-
-            startActivity(intent)
+            startActivity(Intent(this, AllPatientsActivity::class.java))
         }
     }
 }

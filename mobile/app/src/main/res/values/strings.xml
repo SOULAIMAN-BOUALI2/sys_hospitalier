@@ -15,4 +15,7 @@
     <string name="hint_personne_urgence">Nom Personne Urgence</string>
     <string name="hint_telephone_urgence">Téléphone Urgence</string>
     <string name="btn_creer_patient">CRÉER LE PATIENT</string>
+    <string name="label_nom_patient">Nom</string>
+    <string name="label_dossier_patient">Dossier</string>
+    <string name="desc_patient_icon">Icône patient</string>
 </resources>
