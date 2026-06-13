@@ -35,7 +35,7 @@ class PriseEnChargeActivity : AppCompatActivity() {
 
         val userId = intent.getLongExtra("USER_ID", -1)
 
-        setupUrgenceDropdown()
+        setupDropdowns()
         loadInitialData(userId)
 
         binding.btnGenerateIA.setOnClickListener {
@@ -56,10 +56,20 @@ class PriseEnChargeActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupUrgenceDropdown() {
+    private fun setupDropdowns() {
+        // Urgence
         val urgences = arrayOf("Faible", "Moyen", "Élevé", "Critique")
-        val adapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, urgences)
-        binding.autoCompleteUrgence.setAdapter(adapter)
+        binding.autoCompleteUrgence.setAdapter(ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, urgences))
+
+        // Type
+        val types = arrayOf("Standard", "Urgent", "Chirurgical", "Suivi")
+        binding.autoCompleteType.setAdapter(ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, types))
+        binding.autoCompleteType.setText("Standard", false)
+
+        // État
+        val etats = arrayOf("En cours", "Terminé", "Annulé", "En attente")
+        binding.autoCompleteEtat.setAdapter(ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, etats))
+        binding.autoCompleteEtat.setText("En cours", false)
     }
 
     private fun loadInitialData(userId: Long) {
@@ -155,10 +165,13 @@ class PriseEnChargeActivity : AppCompatActivity() {
 
         val currentDate = java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss", java.util.Locale.getDefault()).format(java.util.Date())
 
+        // Création de l'objet avec TOUS les attributs de votre table SQL
         val priseEnCharge = PriseEnCharge(
             patientId = patient.idPatient,
             medecinId = medecin.idMedecin,
             dateDebut = currentDate,
+            type = binding.autoCompleteType.text.toString(),
+            etat = binding.autoCompleteEtat.text.toString(),
             symptomes = binding.etSymptomes.text.toString(),
             constantes = binding.etConstantes.text.toString(),
             niveauUrgence = binding.autoCompleteUrgence.text.toString(),
@@ -169,14 +182,25 @@ class PriseEnChargeActivity : AppCompatActivity() {
         lifecycleScope.launch {
             binding.progressBar.visibility = View.VISIBLE
             try {
-                withContext(Dispatchers.IO) {
+                // Insertion et récupération de l'objet inséré pour avoir l'ID
+                val insertedPriseEnCharge = withContext(Dispatchers.IO) {
                     SupabaseClient.client.postgrest
                         .from("prise_en_charge")
-                        .insert(priseEnCharge)
+                        .insert(priseEnCharge) {
+                            select()
+                        }
+                        .decodeSingle<PriseEnCharge>()
                 }
                 
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(this@PriseEnChargeActivity, "Prise en charge enregistrée !", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@PriseEnChargeActivity, "Prise en charge #${insertedPriseEnCharge.idPriseEnCharge} enregistrée !", Toast.LENGTH_LONG).show()
+                    
+                    // Si des recommandations existent, on peut proposer d'enregistrer les étapes
+                    if (!insertedPriseEnCharge.recommandationsIA.isNullOrBlank()) {
+                        // Logique pour sauvegarder les étapes si besoin
+                        // saveEtapes(insertedPriseEnCharge.idPriseEnCharge!!)
+                    }
+                    
                     finish()
                 }
             } catch (e: Exception) {
@@ -184,6 +208,32 @@ class PriseEnChargeActivity : AppCompatActivity() {
                 Toast.makeText(this@PriseEnChargeActivity, "Erreur lors de l'enregistrement", Toast.LENGTH_SHORT).show()
             } finally {
                 binding.progressBar.visibility = View.GONE
+            }
+        }
+    }
+
+    private fun saveEtapes(priseEnChargeId: Long) {
+        // Cette fonction pourra être appelée pour transformer les recommandations IA
+        // en lignes dans la table 'etape_prise_en_charge'
+        lifecycleScope.launch {
+            try {
+                // Exemple d'une étape par défaut basée sur le protocole
+                val etape = com.example.systemhospitalier.EtapePriseEnCharge(
+                    priseEnChargeId = priseEnChargeId,
+                    ordre = 1,
+                    type = "Soin",
+                    description = "Suivre le protocole IA généré",
+                    etat = "A faire",
+                    acteur = "Infirmier"
+                )
+                
+                withContext(Dispatchers.IO) {
+                    SupabaseClient.client.postgrest
+                        .from("etape_prise_en_charge")
+                        .insert(etape)
+                }
+            } catch (e: Exception) {
+                Log.e("PRISE_EN_CHARGE", "Error saving steps: ${e.message}")
             }
         }
     }
