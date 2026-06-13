@@ -56,3 +56,33 @@ data class Hospitalisation(
     @SerialName("id_patient") val idPatient: Long,
     @SerialName("id_medecin") val idMedecin: Long
 )
+
+@Serializable
+data class PriseEnCharge(
+    @SerialName("id_prise_en_charge") val idPriseEnCharge: Long? = null,
+    @SerialName("patient_id") val patientId: Long,
+    @SerialName("medecin_id") val medecinId: Long,
+    @SerialName("date_debut") val dateDebut: String? = null,
+    @SerialName("type") val type: String? = "Standard",
+    @SerialName("etat") val etat: String? = "En cours",
+    @SerialName("symptomes") val symptomes: String,
+    @SerialName("constantes") val constantes: String,
+    @SerialName("observation") val observation: String,
+    @SerialName("niveau_urgence") val niveauUrgence: String,
+    @SerialName("recommandations_ia") val recommandationsIA: String? = null
+)
+
+@Serializable
+data class EtapePriseEnCharge(
+    @SerialName("id_etape") val idEtape: Long? = null,
+    @SerialName("prise_en_charge_id") val priseEnChargeId: Long,
+    @SerialName("ordre") val ordre: Int,
+    @SerialName("type") val type: String? = null,
+    @SerialName("description") val description: String,
+    @SerialName("date_debut") val dateDebut: String? = null,
+    @SerialName("date_fin") val dateFin: String? = null,
+    @SerialName("etat") val etat: String? = "A faire",
+    @SerialName("observation") val observation: String? = null,
+    @SerialName("acteur") val acteur: String? = null,
+    @SerialName("est_approuve") val estApprouve: Boolean = false
+)

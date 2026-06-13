@@ -1,5 +1,6 @@
-﻿package com.example.systemhospitalier.activities
+package com.example.systemhospitalier.activities
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.ArrayAdapter

@@ -123,5 +123,12 @@ class DashboardMedecinActivity : AppCompatActivity() {
         binding.tvVoirTout.setOnClickListener {
             startActivity(Intent(this, AllPatientsActivity::class.java))
         }
+
+        binding.cardPriseEnCharge.setOnClickListener {
+            val intent = Intent(this, PriseEnChargeActivity::class.java).apply {
+                putExtra("USER_ID", userId)
+            }
+            startActivity(intent)
+        }
     }
 }
