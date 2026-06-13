@@ -9,7 +9,7 @@ export default function LoginPage() {
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
-    console.log(email,password)
+    console.log(email, password);
     e.preventDefault();
     setError("");
 
@@ -23,12 +23,26 @@ export default function LoginPage() {
       localStorage.setItem("prenom", data.prenom);
       localStorage.setItem("email", data.email);
 
+      // Si médecin → récupérer son id pour les consultations/hospitalisations
+      if (data.role === "MEDECIN") {
+        try {
+          const res = await fetch(
+            `http://localhost:8080/api/medecin/me?email=${email}`,
+            { headers: { Authorization: `Bearer ${data.token}` } }
+          );
+          const medecinId = await res.json();
+          localStorage.setItem("medecinId", String(medecinId));
+        } catch {
+          console.error("Impossible de récupérer le medecinId");
+        }
+      }
+
       // Redirection selon le rôle
       if (data.role === "ADMIN") navigate("/admin/dashboard");
       else if (data.role === "MEDECIN") navigate("/medecin/dashboard");
       else if (data.role === "INFIRMIER") navigate("/infirmier/dashboard");
 
-    } catch (err:unknown) {
+    } catch  {
       setError("Email ou mot de passe incorrect");
     }
   };
