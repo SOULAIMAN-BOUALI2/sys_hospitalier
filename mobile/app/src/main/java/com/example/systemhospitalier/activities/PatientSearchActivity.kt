@@ -16,6 +16,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import android.content.Intent
+
 class PatientSearchActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityPatientSearchBinding
@@ -38,8 +42,9 @@ class PatientSearchActivity : AppCompatActivity() {
 
     private fun setupRecyclerView() {
         adapter = PatientSearchAdapter(emptyList()) { patient ->
-            Toast.makeText(this, "Patient: ${patient.nom} ${patient.prenom}\nN° Dossier: ${patient.numeroDossier}", Toast.LENGTH_LONG).show()
-            // Plus tard: ouvrir l'activité de détails
+            val intent = Intent(this, PatientDetailsActivity::class.java)
+            intent.putExtra("PATIENT_JSON", Json.encodeToString(patient))
+            startActivity(intent)
         }
         binding.rvPatients.adapter = adapter
     }

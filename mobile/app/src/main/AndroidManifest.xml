@@ -44,6 +44,27 @@
             android:name=".activities.PatientSearchActivity"
             android:exported="false" />
         <activity
+            android:name=".activities.PatientDetailsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.PatientConsultationsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.ConsultationDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.PatientHospitalisationsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.HospitalisationDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.PatientPriseEnChargeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.PriseEnChargeDetailActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.LoginActivity"
             android:exported="true">
             <intent-filter>
