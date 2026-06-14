@@ -58,4 +58,7 @@ dependencies {
     implementation("org.mindrot:jbcrypt:0.4")
     // Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.0")
+
+    // Gemini AI
+    implementation(libs.generativeai)
 }

@@ -38,6 +38,9 @@
             android:name=".activities.PriseEnChargeActivity"
             android:exported="false" />
         <activity
+            android:name=".activities.ListPriseEnChargeActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.LoginActivity"
             android:exported="true">
             <intent-filter>

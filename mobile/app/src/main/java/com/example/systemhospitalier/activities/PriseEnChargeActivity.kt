@@ -7,10 +7,14 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.systemhospitalier.EtapePriseEnCharge
 import com.example.systemhospitalier.Medecin
 import com.example.systemhospitalier.PriseEnCharge
+import com.example.systemhospitalier.adapter.EtapeAdapter
 import com.example.systemhospitalier.databinding.ActivityPriseEnChargeBinding
 import com.example.systemhospitalier.models.Patient
+import com.example.systemhospitalier.network.GeminiService
 import com.example.systemhospitalier.network.SupabaseClient
 import io.github.jan.supabase.postgrest.postgrest
 import kotlinx.coroutines.Dispatchers
@@ -23,6 +27,12 @@ class PriseEnChargeActivity : AppCompatActivity() {
     private var patients: List<Patient> = emptyList()
     private var selectedPatient: Patient? = null
     private var currentMedecin: Medecin? = null
+    
+    // Pour gérer les étapes
+    private var currentPriseEnChargeId: Long? = null
+    private var generatedEtapes: List<EtapePriseEnCharge> = emptyList()
+    private lateinit var etapeAdapter: EtapeAdapter
+    private val geminiService = GeminiService()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,6 +46,7 @@ class PriseEnChargeActivity : AppCompatActivity() {
         val userId = intent.getLongExtra("USER_ID", -1)
 
         setupDropdowns()
+        setupRecyclerView()
         loadInitialData(userId)
 
         binding.btnGenerateIA.setOnClickListener {
@@ -51,42 +62,44 @@ class PriseEnChargeActivity : AppCompatActivity() {
         }
 
         binding.btnApproveSteps.setOnClickListener {
-            Toast.makeText(this, "Étapes approuvées et prêtes à être enregistrées", Toast.LENGTH_SHORT).show()
-            // Logique future pour enregistrer les EtapePriseEnCharge
+            if (currentPriseEnChargeId != null && generatedEtapes.isNotEmpty()) {
+                saveEtapesInDatabase()
+            } else {
+                Toast.makeText(this, "Veuillez d'abord enregistrer la prise en charge", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
     private fun setupDropdowns() {
-        // Urgence
         val urgences = arrayOf("Faible", "Moyen", "Élevé", "Critique")
         binding.autoCompleteUrgence.setAdapter(ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, urgences))
 
-        // Type
         val types = arrayOf("Standard", "Urgent", "Chirurgical", "Suivi")
         binding.autoCompleteType.setAdapter(ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, types))
         binding.autoCompleteType.setText("Standard", false)
 
-        // État
         val etats = arrayOf("En cours", "Terminé", "Annulé", "En attente")
         binding.autoCompleteEtat.setAdapter(ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, etats))
         binding.autoCompleteEtat.setText("En cours", false)
+    }
+
+    private fun setupRecyclerView() {
+        etapeAdapter = EtapeAdapter(emptyList())
+        binding.rvEtapes.layoutManager = LinearLayoutManager(this)
+        binding.rvEtapes.adapter = etapeAdapter
     }
 
     private fun loadInitialData(userId: Long) {
         lifecycleScope.launch {
             binding.progressBar.visibility = View.VISIBLE
             try {
-                // Fetch Medecin
                 currentMedecin = withContext(Dispatchers.IO) {
                     SupabaseClient.client.postgrest
                         .from("medecin")
-                        .select {
-                            filter { eq("id_user", userId) }
-                        }
+                        .select { filter { eq("id_user", userId) } }
                         .decodeSingleOrNull<Medecin>()
                 }
 
-                // Fetch Patients
                 patients = withContext(Dispatchers.IO) {
                     SupabaseClient.client.postgrest
                         .from("patient")
@@ -105,7 +118,6 @@ class PriseEnChargeActivity : AppCompatActivity() {
                 }
             } catch (e: Exception) {
                 Log.e("PRISE_EN_CHARGE", "Error loading data: ${e.message}")
-                Toast.makeText(this@PriseEnChargeActivity, "Erreur de chargement", Toast.LENGTH_SHORT).show()
             } finally {
                 binding.progressBar.visibility = View.GONE
             }
@@ -123,49 +135,53 @@ class PriseEnChargeActivity : AppCompatActivity() {
             return false
         } else binding.tilSymptomes.error = null
 
-        if (binding.autoCompleteUrgence.text.isNullOrBlank()) {
-            binding.tilUrgence.error = "Champ requis"
-            return false
-        } else binding.tilUrgence.error = null
-
         return true
     }
 
     private fun generateAIProtocol() {
         binding.layoutAIResult.visibility = View.VISIBLE
-        binding.tvAIRecommendation.text = "Génération du protocole par l'IA en cours..."
+        binding.tvAIRecommendation.text = "Génération du protocole par Gemini..."
+        binding.btnApproveSteps.visibility = View.GONE
         
+        val tempPriseEnCharge = PriseEnCharge(
+            patientId = selectedPatient?.idPatient ?: 0,
+            medecinId = currentMedecin?.idMedecin ?: 0,
+            symptomes = binding.etSymptomes.text.toString(),
+            constantes = binding.etConstantes.text.toString(),
+            niveauUrgence = binding.autoCompleteUrgence.text.toString(),
+            observation = binding.etObservation.text.toString()
+        )
+
         lifecycleScope.launch {
-            // Simulation d'appel LLM (Gemini/Ollama)
-            withContext(Dispatchers.IO) {
-                kotlinx.coroutines.delay(2000)
-            }
-            
-            val prompt = """
-                En tant qu'assistant médical IA, voici un protocole suggéré pour :
-                Patient: ${selectedPatient?.nom} ${selectedPatient?.prenom}
-                Symptômes: ${binding.etSymptomes.text}
-                Constantes: ${binding.etConstantes.text}
-                Urgence: ${binding.autoCompleteUrgence.text}
+            binding.progressBar.visibility = View.VISIBLE
+            try {
+                generatedEtapes = withContext(Dispatchers.IO) {
+                    geminiService.generateEtapes(tempPriseEnCharge)
+                }
                 
-                Recommandations :
-                1. Surveillance continue des constantes.
-                2. Administration de soins de support immédiats.
-                3. Examens complémentaires (Bilan sanguin, ECG).
-                4. Consultation spécialisée si les symptômes persistent.
-            """.trimIndent()
-            
-            binding.tvAIRecommendation.text = prompt
+                withContext(Dispatchers.Main) {
+                    if (generatedEtapes.isNotEmpty()) {
+                        binding.tvAIRecommendation.text = "Protocole généré avec succès (${generatedEtapes.size} étapes) :"
+                        etapeAdapter.updateData(generatedEtapes)
+                        binding.btnApproveSteps.visibility = View.VISIBLE
+                    } else {
+                        binding.tvAIRecommendation.text = "Échec de la génération. Veuillez réessayer."
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("GEMINI", "Error: ${e.message}")
+                binding.tvAIRecommendation.text = "Erreur IA : ${e.message}"
+            } finally {
+                binding.progressBar.visibility = View.GONE
+            }
         }
     }
 
     private fun savePriseEnCharge() {
         val medecin = currentMedecin ?: return
         val patient = selectedPatient ?: return
-
         val currentDate = java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss", java.util.Locale.getDefault()).format(java.util.Date())
 
-        // Création de l'objet avec TOUS les attributs de votre table SQL
         val priseEnCharge = PriseEnCharge(
             patientId = patient.idPatient,
             medecinId = medecin.idMedecin,
@@ -175,65 +191,58 @@ class PriseEnChargeActivity : AppCompatActivity() {
             symptomes = binding.etSymptomes.text.toString(),
             constantes = binding.etConstantes.text.toString(),
             niveauUrgence = binding.autoCompleteUrgence.text.toString(),
-            observation = binding.etObservation.text.toString(),
-            recommandationsIA = binding.tvAIRecommendation.text.toString()
+            observation = binding.etObservation.text.toString()
         )
 
         lifecycleScope.launch {
             binding.progressBar.visibility = View.VISIBLE
             try {
-                // Insertion et récupération de l'objet inséré pour avoir l'ID
-                val insertedPriseEnCharge = withContext(Dispatchers.IO) {
+                val inserted = withContext(Dispatchers.IO) {
                     SupabaseClient.client.postgrest
                         .from("prise_en_charge")
-                        .insert(priseEnCharge) {
-                            select()
-                        }
+                        .insert(priseEnCharge) { select() }
                         .decodeSingle<PriseEnCharge>()
                 }
                 
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(this@PriseEnChargeActivity, "Prise en charge #${insertedPriseEnCharge.idPriseEnCharge} enregistrée !", Toast.LENGTH_LONG).show()
+                    currentPriseEnChargeId = inserted.idPriseEnCharge
+                    Toast.makeText(this@PriseEnChargeActivity, "Prise en charge enregistrée ! ID: $currentPriseEnChargeId", Toast.LENGTH_SHORT).show()
                     
-                    // Si des recommandations existent, on peut proposer d'enregistrer les étapes
-                    if (!insertedPriseEnCharge.recommandationsIA.isNullOrBlank()) {
-                        // Logique pour sauvegarder les étapes si besoin
-                        // saveEtapes(insertedPriseEnCharge.idPriseEnCharge!!)
-                    }
+                    // On met à jour l'ID dans les étapes générées si elles existent
+                    generatedEtapes = generatedEtapes.map { it.copy(priseEnChargeId = currentPriseEnChargeId!!) }
                     
-                    finish()
+                    // On ne fait PAS finish() pour rester sur la page
+                    binding.btnSave.isEnabled = false // Empêcher les doublons
+                    binding.btnSave.text = "Enregistré"
                 }
             } catch (e: Exception) {
-                Log.e("PRISE_EN_CHARGE", "Error saving: ${e.message}")
-                Toast.makeText(this@PriseEnChargeActivity, "Erreur lors de l'enregistrement", Toast.LENGTH_SHORT).show()
+                Log.e("PRISE_EN_CHARGE", "Error: ${e.message}")
+                Toast.makeText(this@PriseEnChargeActivity, "Erreur d'enregistrement", Toast.LENGTH_SHORT).show()
             } finally {
                 binding.progressBar.visibility = View.GONE
             }
         }
     }
 
-    private fun saveEtapes(priseEnChargeId: Long) {
-        // Cette fonction pourra être appelée pour transformer les recommandations IA
-        // en lignes dans la table 'etape_prise_en_charge'
+    private fun saveEtapesInDatabase() {
         lifecycleScope.launch {
+            binding.progressBar.visibility = View.VISIBLE
             try {
-                // Exemple d'une étape par défaut basée sur le protocole
-                val etape = com.example.systemhospitalier.EtapePriseEnCharge(
-                    priseEnChargeId = priseEnChargeId,
-                    ordre = 1,
-                    type = "Soin",
-                    description = "Suivre le protocole IA généré",
-                    etat = "A faire",
-                    acteur = "Infirmier"
-                )
-                
                 withContext(Dispatchers.IO) {
                     SupabaseClient.client.postgrest
                         .from("etape_prise_en_charge")
-                        .insert(etape)
+                        .insert(generatedEtapes)
+                }
+                
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@PriseEnChargeActivity, "Toutes les étapes ont été enregistrées !", Toast.LENGTH_LONG).show()
+                    finish() // On peut maintenant quitter
                 }
             } catch (e: Exception) {
-                Log.e("PRISE_EN_CHARGE", "Error saving steps: ${e.message}")
+                Log.e("ETAPES", "Error saving steps: ${e.message}")
+                Toast.makeText(this@PriseEnChargeActivity, "Erreur lors de l'enregistrement des étapes", Toast.LENGTH_SHORT).show()
+            } finally {
+                binding.progressBar.visibility = View.GONE
             }
         }
     }
