@@ -130,5 +130,9 @@ class DashboardMedecinActivity : AppCompatActivity() {
             }
             startActivity(intent)
         }
+
+        binding.cardSearchPatient.setOnClickListener {
+            startActivity(Intent(this, PatientSearchActivity::class.java))
+        }
     }
 }
