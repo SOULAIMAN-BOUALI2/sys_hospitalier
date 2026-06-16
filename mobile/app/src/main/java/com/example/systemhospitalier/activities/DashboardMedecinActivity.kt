@@ -134,5 +134,9 @@ class DashboardMedecinActivity : AppCompatActivity() {
         binding.cardSearchPatient.setOnClickListener {
             startActivity(Intent(this, PatientSearchActivity::class.java))
         }
+
+        binding.cardAIDetection.setOnClickListener {
+            startActivity(Intent(this, PatientDetectionActivity::class.java))
+        }
     }
 }

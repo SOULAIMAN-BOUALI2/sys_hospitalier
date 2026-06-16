@@ -65,6 +65,9 @@
             android:name=".activities.PriseEnChargeDetailActivity"
             android:exported="false" />
         <activity
+            android:name=".activities.PatientDetectionActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.LoginActivity"
             android:exported="true">
             <intent-filter>
