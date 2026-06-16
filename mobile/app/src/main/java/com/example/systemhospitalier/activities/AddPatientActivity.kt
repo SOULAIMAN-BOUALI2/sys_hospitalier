@@ -24,6 +24,11 @@ class AddPatientActivity : AppCompatActivity() {
         binding = ActivityAddPatientBinding.inflate(layoutInflater)
 
         setContentView(binding.root)
+
+        setSupportActionBar(binding.toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        binding.toolbar.setNavigationOnClickListener { finish() }
+
         binding.etDateNaissance.setOnClickListener {
 
             val calendar = Calendar.getInstance()

@@ -11,7 +11,6 @@ import com.example.systemhospitalier.AuthRepository
 import com.example.systemhospitalier.DashboardAdminActivity
 import com.example.systemhospitalier.DashboardInfirmierActivity
 import com.example.systemhospitalier.activities.DashboardMedecinActivity
-import com.example.systemhospitalier.SignupActivity
 import com.example.systemhospitalier.databinding.ActivityLoginBinding
 import kotlinx.coroutines.launch
 
@@ -26,10 +25,6 @@ class LoginActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setupPasswordToggle()
-
-        binding.tvGoToSignup.setOnClickListener {
-            startActivity(Intent(this, SignupActivity::class.java))
-        }
 
         binding.btnLogin.setOnClickListener {
             val email = binding.etEmail.text.toString().trim()

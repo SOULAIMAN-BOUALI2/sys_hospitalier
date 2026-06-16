@@ -163,7 +163,7 @@
                 android:id="@+id/cardPrisesEnCharge"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
+                android:layout_marginBottom="24dp"
                 app:cardCornerRadius="12dp"
                 app:cardElevation="2dp">
                 <LinearLayout
@@ -177,6 +177,17 @@
                     <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@android:drawable/ic_media_play" app:tint="#DDDDDD"/>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnDeletePatient"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:text="🗑 Supprimer le patient"
+                android:textColor="#C62828"
+                app:rippleColor="#FFEBEE"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="32dp"/>
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

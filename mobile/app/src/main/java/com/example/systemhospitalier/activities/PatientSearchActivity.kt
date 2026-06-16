@@ -40,6 +40,11 @@ class PatientSearchActivity : AppCompatActivity() {
         setupSearch()
     }
 
+    override fun onResume() {
+        super.onResume()
+        loadPatients()
+    }
+
     private fun setupRecyclerView() {
         adapter = PatientSearchAdapter(emptyList()) { patient ->
             val intent = Intent(this, PatientDetailsActivity::class.java)

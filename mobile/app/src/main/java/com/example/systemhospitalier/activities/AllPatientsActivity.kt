@@ -27,6 +27,10 @@ class AllPatientsActivity : AppCompatActivity() {
         binding = ActivityAllPatientsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        setSupportActionBar(binding.toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        binding.toolbar.setNavigationOnClickListener { finish() }
+
         binding.rvPatients.layoutManager = LinearLayoutManager(this)
 
         loadPatients()

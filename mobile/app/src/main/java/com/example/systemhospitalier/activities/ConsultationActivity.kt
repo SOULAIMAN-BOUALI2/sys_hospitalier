@@ -30,6 +30,10 @@ class ConsultationActivity : AppCompatActivity() {
         binding = ActivityConsultationBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        setSupportActionBar(binding.toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        binding.toolbar.setNavigationOnClickListener { finish() }
+
         val userId = intent.getLongExtra("USER_ID", -1)
 
         loadInitialData(userId)
