@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 data class Patient(
 
     @SerialName("id_patient")
-    val idPatient: Long,
+    val idPatient: Long? = null,
 
     @SerialName("nom")
     val nom: String,

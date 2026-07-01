@@ -86,44 +86,34 @@ class AddPatientActivity : AppCompatActivity() {
 
         binding.btnSavePatient.setOnClickListener {
 
-            val numero =
-                binding.etNumeroDossier.text.toString()
+            val numero = binding.etNumeroDossier.text.toString().trim()
+            val nom = binding.etNom.text.toString().trim()
+            val prenom = binding.etPrenom.text.toString().trim()
+            val date = binding.etDateNaissance.text.toString().trim()
+            val adresse = binding.etAdresse.text.toString().trim()
+            val urgence = binding.etPersonneUrgence.text.toString().trim()
+            val telephone = binding.etTelephoneUrgence.text.toString().trim()
+            val sexe = binding.autoSexe.text.toString().trim()
+            val groupeSanguin = binding.autoGroupeSanguin.text.toString().trim()
 
-            val nom =
-                binding.etNom.text.toString()
+            if (numero.isEmpty() || nom.isEmpty() || prenom.isEmpty() || date.isEmpty() || sexe.isEmpty()) {
+                Toast.makeText(this, "Veuillez remplir les champs obligatoires", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
 
-            val prenom =
-                binding.etPrenom.text.toString()
-
-            val date =
-                binding.etDateNaissance.text.toString()
-
-            val adresse =
-                binding.etAdresse.text.toString()
-
-            val urgence =
-                binding.etPersonneUrgence.text.toString()
-
-            val telephone =
-                binding.etTelephoneUrgence.text.toString()
-
-            //au lieu de faire .log -> insertion dans la bd
             lifecycleScope.launch {
-
                 try {
-
                     SupabaseClient.client.postgrest
                         .from("patient")
                         .insert(
                             Patient(
-                                idPatient = 0,
                                 nom = nom,
                                 prenom = prenom,
                                 numeroDossier = numero,
                                 date = date,
-                                sexe = binding.autoSexe.text.toString(),
+                                sexe = sexe,
                                 adresse = adresse,
-                                groupeSanguin = binding.autoGroupeSanguin.text.toString(),
+                                groupeSanguin = groupeSanguin,
                                 personneUrgence = urgence,
                                 telephoneUrgence = telephone
                             )
@@ -131,17 +121,20 @@ class AddPatientActivity : AppCompatActivity() {
 
                     Toast.makeText(
                         this@AddPatientActivity,
-                        "Patient ajouté",
+                        "Patient ajouté avec succès",
                         Toast.LENGTH_SHORT
                     ).show()
                     finish()
 
                 } catch (e: Exception) {
-
-                    Log.e("SUPABASE", e.message.toString())
+                    Log.e("SUPABASE", "Error inserting patient: ${e.message}")
+                    Toast.makeText(
+                        this@AddPatientActivity,
+                        "Erreur lors de l'ajout : ${e.localizedMessage}",
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
             }
-
         }
     }
 }

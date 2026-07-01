@@ -104,7 +104,7 @@ class ConsultationActivity : AppCompatActivity() {
         lifecycleScope.launch {
             try {
                 val consultation = Consultation(
-                    patientId = patient.idPatient,
+                    patientId = patient.idPatient ?: 0L,
                     medecinId = medecinId,
                     dateConsultation = currentDate,
                     motif = motif,

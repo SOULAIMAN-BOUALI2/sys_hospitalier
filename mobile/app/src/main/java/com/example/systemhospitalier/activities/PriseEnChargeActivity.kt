@@ -144,6 +144,7 @@ class PriseEnChargeActivity : AppCompatActivity() {
         binding.btnApproveSteps.visibility = View.GONE
         
         val tempPriseEnCharge = PriseEnCharge(
+            idPriseEnCharge = currentPriseEnChargeId,
             patientId = selectedPatient?.idPatient ?: 0,
             medecinId = currentMedecin?.idMedecin ?: 0,
             symptomes = binding.etSymptomes.text.toString(),
@@ -183,7 +184,7 @@ class PriseEnChargeActivity : AppCompatActivity() {
         val currentDate = java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss", java.util.Locale.getDefault()).format(java.util.Date())
 
         val priseEnCharge = PriseEnCharge(
-            patientId = patient.idPatient,
+            patientId = patient.idPatient ?: 0L,
             medecinId = medecin.idMedecin,
             dateDebut = currentDate,
             type = binding.autoCompleteType.text.toString(),
@@ -228,10 +229,13 @@ class PriseEnChargeActivity : AppCompatActivity() {
         lifecycleScope.launch {
             binding.progressBar.visibility = View.VISIBLE
             try {
+                // Sécurité : s'assurer que toutes les étapes ont bien l'ID de la prise en charge
+                val etapesAEnregistrer = generatedEtapes.map { it.copy(priseEnChargeId = currentPriseEnChargeId!!) }
+                
                 withContext(Dispatchers.IO) {
                     SupabaseClient.client.postgrest
                         .from("etape_prise_en_charge")
-                        .insert(generatedEtapes)
+                        .insert(etapesAEnregistrer)
                 }
                 
                 withContext(Dispatchers.Main) {

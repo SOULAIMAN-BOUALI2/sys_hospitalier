@@ -108,7 +108,7 @@ class HospitalisationActivity : AppCompatActivity() {
                     motif = motif,
                     etatPatient = etat,
                     diagnosticInitial = diagnostic,
-                    idPatient = patient.idPatient,
+                    idPatient = patient.idPatient ?: 0L,
                     idMedecin = medecinId
                 )
 
